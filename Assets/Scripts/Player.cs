@@ -18,6 +18,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _doubleJumpHeight = 8f;
     private bool _isDoubleJump;
+
+    private int _coins;
+   
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -50,5 +53,14 @@ public class Player : MonoBehaviour
         }
         velocity.y = _yVelocity;
         _characterController.Move(velocity * Time.deltaTime);
+    }
+
+    public void AddCoin()
+    {
+        _coins += 1;
+        if (UIManager.Instance !=null)
+        {
+            UIManager.Instance.UpdatePlayerCoinsConsumed(_coins);
+        }
     }
 }
