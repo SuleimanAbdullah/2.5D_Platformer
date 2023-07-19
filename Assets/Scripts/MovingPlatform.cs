@@ -11,28 +11,8 @@ public class MovingPlatform : MonoBehaviour
 
     private bool _isTargetB;
 
-    private void Update()
+    private void FixedUpdate()
     {
-
-        /*if (_isTargetB==false)
-        {
-            if (transform.position ==_pointB.position)
-            {
-                _isTargetB = true;
-            }
-            transform.position = Vector3.MoveTowards(transform.position, _pointB.position, _speed * Time.deltaTime);
-            Debug.Log("Move PointA");
-        }
-        if (_isTargetB ==true)
-        {
-            if (transform.position == _pointA.position)
-            {
-                _isTargetB = false;
-            }
-            transform.position = Vector3.MoveTowards(transform.position, _pointA.position, _speed * Time.deltaTime);
-            Debug.Log("Move PointB");
-        }*/
-
         switch (_isTargetB)
         {
             case false:
@@ -41,7 +21,6 @@ public class MovingPlatform : MonoBehaviour
                     _isTargetB = true;
                 }
                 transform.position = Vector3.MoveTowards(transform.position, _pointB.position, _speed * Time.deltaTime);
-                Debug.Log("Move PointA");
                 break;
 
             case true:
@@ -50,9 +29,24 @@ public class MovingPlatform : MonoBehaviour
                     _isTargetB = false;
                 }
                 transform.position = Vector3.MoveTowards(transform.position, _pointA.position, _speed * Time.deltaTime);
-                Debug.Log("Move PointB");
+               
                 break;
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            other.transform.parent = this.transform;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            other.transform.parent = null;
+        }
+    }
 }

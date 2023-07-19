@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -20,10 +21,13 @@ public class Player : MonoBehaviour
     private bool _isDoubleJump;
 
     private int _coins;
-   
+
+    private int _lives = 3;
+
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        UIManager.Instance.UPdateLivesText(_lives);
     }
 
     private void Update()
@@ -52,15 +56,27 @@ public class Player : MonoBehaviour
             _yVelocity -= _gravity;
         }
         velocity.y = _yVelocity;
+        Physics.SyncTransforms();
         _characterController.Move(velocity * Time.deltaTime);
     }
 
     public void AddCoin()
     {
         _coins += 1;
-        if (UIManager.Instance !=null)
+        if (UIManager.Instance != null)
         {
             UIManager.Instance.UpdatePlayerCoinsConsumed(_coins);
         }
+    }
+
+    public void Damage()
+    {
+        _lives--;
+        if (_lives == 0)
+        {
+            _lives = 0;
+            SceneManager.LoadScene(0);
+        }
+        UIManager.Instance.UPdateLivesText(_lives);
     }
 }

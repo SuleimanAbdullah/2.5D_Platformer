@@ -5,14 +5,18 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField]
     private TextMeshProUGUI _coinText;
-    
+
+    [SerializeField]
+    private TextMeshProUGUI _livesText;
+
     private static UIManager _instance;
     public static UIManager Instance
     {
         get
         {
-            if (_instance ==null)
+            if (_instance == null)
             {
                 Debug.LogError("UIManager is NULL: ");
             }
@@ -22,16 +26,21 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-       _coinText = GetComponentInChildren<TextMeshProUGUI>();
+        _coinText = GetComponentInChildren<TextMeshProUGUI>();
+        _instance = this;
     }
     void Start()
     {
         _coinText.text = "Coins: " + 0;
-        _instance = this;
     }
 
     public void UpdatePlayerCoinsConsumed(int amount)
     {
         _coinText.text = "Coins: " + amount;
+    }
+
+    public void UPdateLivesText(int lives)
+    {
+        _livesText.text = "Lives: " + lives;
     }
 }
