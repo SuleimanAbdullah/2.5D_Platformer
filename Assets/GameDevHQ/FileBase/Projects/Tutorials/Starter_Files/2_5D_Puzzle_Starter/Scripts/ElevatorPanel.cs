@@ -11,6 +11,7 @@ public class ElevatorPanel : MonoBehaviour
     private MeshRenderer _meshRenderer;
 
     private Elevator _elevator;
+    private bool _isElevatorCalled;
     private void Awake()
     {
         _elevator = GameObject.Find("Elevator").GetComponent<Elevator>();
@@ -20,26 +21,19 @@ public class ElevatorPanel : MonoBehaviour
         if (other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
-            if (Input.GetKeyDown(KeyCode.E) && player.CointCount() >=_coinCollected)
+            if (Input.GetKeyDown(KeyCode.E) && player.CointCount() >= _coinCollected)
             {
-                _meshRenderer.material.color = Color.green;
-                Elevator.IsGoingDown = true;
+                if (_isElevatorCalled == true)
+                {
+                    _meshRenderer.material.color = Color.red;
+                }
+                else
+                {
+                    _isElevatorCalled = true;
+                    _meshRenderer.material.color = Color.green;
+                }
+                _elevator.CallElevator();
             }
-           
-        }
-    }
-
-    IEnumerator WaitBeforeGoingUp()
-    {
-        yield return new WaitForSeconds(2f);
-        Elevator.IsGoingDown = false;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            StartCoroutine(WaitBeforeGoingUp());
         }
     }
 }

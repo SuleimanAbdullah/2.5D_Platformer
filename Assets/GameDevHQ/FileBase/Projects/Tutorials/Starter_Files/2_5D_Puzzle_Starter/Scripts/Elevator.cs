@@ -9,18 +9,7 @@ public class Elevator : MonoBehaviour
     [SerializeField]
     private Transform _targetPosB;
 
-    public static bool _isGoingDown;
-    public static bool IsGoingDown
-    {
-        get
-        {
-            return _isGoingDown;
-        }
-        set
-        {
-            _isGoingDown = value;
-        }
-    }
+    public bool _isGoingDown;
 
     private void FixedUpdate()
     {
@@ -30,11 +19,18 @@ public class Elevator : MonoBehaviour
                 , Time.deltaTime * 3f);
         }
 
-        else if (_isGoingDown ==false)
+        else if (_isGoingDown == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, _targetPosA.position
                 , Time.deltaTime * 3);
         }
+    }
+
+
+
+    public void CallElevator()
+    {
+        _isGoingDown = !_isGoingDown;
     }
 
     private void OnTriggerEnter(Collider other)
