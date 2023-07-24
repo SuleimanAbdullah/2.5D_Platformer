@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Cliff
+  - Wall
+  - MovingBox
   layers:
   - Default
   - TransparentFX

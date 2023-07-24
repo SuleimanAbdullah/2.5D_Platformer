@@ -11,8 +11,10 @@ public class ElevatorPanel : MonoBehaviour
     private MeshRenderer _meshRenderer;
 
     private Elevator _elevator;
-    private bool _isElevatorCalled;
-    private void Awake()
+
+    private bool _isElevatorCalled = false;
+
+    private void Start()
     {
         _elevator = GameObject.Find("Elevator").GetComponent<Elevator>();
     }
@@ -23,16 +25,17 @@ public class ElevatorPanel : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (Input.GetKeyDown(KeyCode.E) && player.CointCount() >= _coinCollected)
             {
+                _elevator.CallElevator();
                 if (_isElevatorCalled == true)
                 {
                     _meshRenderer.material.color = Color.red;
                 }
-                else
+                else 
                 {
-                    _isElevatorCalled = true;
                     _meshRenderer.material.color = Color.green;
+                    _isElevatorCalled = true;
+                   
                 }
-                _elevator.CallElevator();
             }
         }
     }

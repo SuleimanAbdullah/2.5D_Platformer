@@ -9,24 +9,22 @@ public class Elevator : MonoBehaviour
     [SerializeField]
     private Transform _targetPosB;
 
-    public bool _isGoingDown;
+    private bool _isGoingDown = false;
 
     private void FixedUpdate()
     {
         if (_isGoingDown == true)
         {
             transform.position = Vector3.MoveTowards(transform.position, _targetPosB.position
-                , Time.deltaTime * 3f);
+                , 3f * Time.deltaTime);
         }
 
-        else if (_isGoingDown == false)
+        else if(_isGoingDown ==false)
         {
             transform.position = Vector3.MoveTowards(transform.position, _targetPosA.position
-                , Time.deltaTime * 3);
+                , 3f * Time.deltaTime);
         }
     }
-
-
 
     public void CallElevator()
     {

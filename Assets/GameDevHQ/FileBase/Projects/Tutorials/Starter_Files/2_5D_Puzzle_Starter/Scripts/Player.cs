@@ -20,7 +20,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
 
-    // Start is called before the first frame update
+    private Vector3 _direction, _velocity
+        ;
+    private bool _canWallJump;
+    private Vector3 _surfaceNormal;
+    [SerializeField]
+    private float _wallJumpHeight;
+
+    private float _pushPower = 2.0f;
+
     void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -28,13 +36,12 @@ public class Player : MonoBehaviour
 
         if (_uiManager == null)
         {
-            Debug.LogError("The UI Manager is NULL."); 
+            Debug.LogError("The UI Manager is NULL.");
         }
 
         _uiManager.UpdateLivesDisplay(_lives);
     }
 
-    // Update is called once per frame
     void Update()
     {
         CalculateMovement();
@@ -43,11 +50,13 @@ public class Player : MonoBehaviour
     private void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        Vector3 direction = new Vector3(horizontalInput, 0, 0);
-        Vector3 velocity = direction * _speed;
+
 
         if (_controller.isGrounded == true)
         {
+            _canWallJump = false;
+            _direction = new Vector3(horizontalInput, 0, 0);
+            _velocity = _direction * _speed;
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _yVelocity = _jumpHeight;
@@ -58,18 +67,23 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (_canDoubleJump == true)
+                if (_canDoubleJump == true && _canWallJump == false)
                 {
                     _yVelocity += _jumpHeight;
                     _canDoubleJump = false;
                 }
-            }
+                else
+                {
+                    _yVelocity = _wallJumpHeight;
+                    _velocity = _surfaceNormal * _speed;
+                }
 
+            }
             _yVelocity -= _gravity;
         }
-        velocity.y = _yVelocity;
+        _velocity.y = _yVelocity;
         Physics.SyncTransforms();
-        _controller.Move(velocity * Time.deltaTime);
+        _controller.Move(_velocity * Time.deltaTime);
     }
 
     public void AddCoins()
@@ -94,5 +108,28 @@ public class Player : MonoBehaviour
     public int CointCount()
     {
         return _coins;
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.transform.tag =="MovingBox")
+        {
+            Rigidbody rb = hit.collider.attachedRigidbody;
+
+            if (rb !=null)
+            {
+                Vector3 pushDirection = new Vector3(hit.moveDirection.x, 0, 0);
+
+                rb.velocity = pushDirection * _pushPower;
+            }
+        }
+       
+
+        if (hit.transform.tag == "Wall" && _controller.isGrounded == false)
+        {
+            _canWallJump = true;
+            _surfaceNormal = hit.normal;
+            Debug.DrawRay(hit.point, hit.normal, Color.blue);
+        }
     }
 }
